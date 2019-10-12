@@ -6,6 +6,8 @@ import sys
 import datetime
 import random
 
+ISOFRIDAY = 5 # because standards
+
 def login():
     auth = tweepy.OAuthHandler(secrets.consumer_key, secrets.consumer_secret)
     auth.set_access_token(secrets.access_token, secrets.access_secret)
@@ -30,8 +32,12 @@ def send_friday_tweet():
 if __name__ == '__main__':
     api = login()
 
-    if '--friday' in sys.argv:
-        send_friday_tweet()
+    if '--tweet' in sys.argv:
+        weekday = datetime.datetime.today().isoweekday()
+        if weekday == ISOFRIDAY:
+            send_friday_tweet()
+        else:
+            print("It's not Friday today. Push at will.")
 
     elif '--test-api' in sys.argv:
         print(api.get_user('twitter'))
