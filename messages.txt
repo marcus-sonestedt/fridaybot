@@ -1,0 +1,2 @@
+Friends don't let friends push to production on Fridays.
+It's Friday, people. You know what it means.

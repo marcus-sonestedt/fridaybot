@@ -1,2 +1,4 @@
-# fridaybot
-Wekkyl reminder to not push to production, inspired by Kelly Vaughn
+# FridayBot
+
+Weekly reminder to not push to production, inspired and in honour of Kelly Vaughn (@kvlly on Twitter)
+
