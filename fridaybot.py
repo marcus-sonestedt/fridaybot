@@ -5,8 +5,11 @@ import sys
 import datetime
 import random
 import yaml
+import os.path
 
 ISOFRIDAY = 5 # because standards
+messageDir = os.path.dirname(os.path.realpath(__file__))
+
 def login():
     auth = tweepy.OAuthHandler(secrets.consumer_key, secrets.consumer_secret)
     auth.set_access_token(secrets.access_token, secrets.access_secret)
@@ -14,7 +17,7 @@ def login():
     return api
 
 def generate_message():
-    with open('messages.txt') as file:
+    with open(os.path.join(messageDir, 'messages.txt')) as file:
         lines = file.readlines()   
 
     random.seed(datetime.datetime.utcnow())
@@ -23,7 +26,7 @@ def generate_message():
     return lines[i].strip() + "\n\n#nopushfridays"
 
 def generate_message_from_yaml():
-    with open('messages.yaml', 'r', 4096, 'utf-8') as file:
+    with open(os.path.join(messageDir, 'messages.yaml'), 'r', 4096, 'utf-8') as file:
         repo = yaml.safe_load(file)
 
     random.seed(datetime.datetime.utcnow())
