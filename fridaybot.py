@@ -65,18 +65,22 @@ def send_friday_yaml_tweet():
         media_ids = [media.media_id]
 
     api.update_status(tweet['text'], media_ids=media_ids, attachment_url=tweet.get('video'))
+    
+def friday():
+    api = login()
+    weekday = datetime.datetime.today().isoweekday()
+    if weekday == ISOFRIDAY:
+        send_friday_yaml_tweet()
+    else:            
+        print("It's not Friday today. Push at will.")
+        print("\nLast tweet was:\n");
+        print(api.get_user('fridaybot3').status.text)
 
 if __name__ == '__main__':
     api = login()
 
     if '--tweet' in sys.argv:
-        weekday = datetime.datetime.today().isoweekday()
-        if weekday == ISOFRIDAY:
-            send_friday_yaml_tweet()
-        else:            
-            print("It's not Friday today. Push at will.")
-            print("\nLast tweet was:\n");
-            print(api.get_user('fridaybot3').status.text)
+        friday()
 
     elif '--test-api' in sys.argv:
         print(api.get_user('twitter'))
