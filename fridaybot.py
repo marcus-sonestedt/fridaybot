@@ -73,8 +73,10 @@ if __name__ == '__main__':
         weekday = datetime.datetime.today().isoweekday()
         if weekday == ISOFRIDAY:
             send_friday_yaml_tweet()
-        else:
+        else:            
             print("It's not Friday today. Push at will.")
+            print("\nLast tweet was:\n");
+            print(api.get_user('fridaybot3').status.text)
 
     elif '--test-api' in sys.argv:
         print(api.get_user('twitter'))
