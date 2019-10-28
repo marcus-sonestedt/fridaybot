@@ -41,22 +41,21 @@ def generate_message_from_yaml():
     else:
         raise Exception("I can't handle the " + str(type(tweet)))
 
-    suffix = "\n\n#nopushfridays"    
+    suffix = "\n\n#nopushfridays"
 
     if len(ret['text']) < 160 - len(suffix):
         ret['text'] += suffix
 
     return ret
 
-def send_friday_tweet():
-    api = login()
+def send_friday_tweet(api):
     msg = generate_message()
     print("Tweeting: " + msg)
     api.update_status(msg)
 
 def send_friday_yaml_tweet(api):
     tweet = generate_message_from_yaml()
-    print("Tweeting: " + tweet['text'])
+    print("Tweeting:\n" + tweet['text'])
 
     media_ids = None
     if 'image' in tweet:
@@ -65,17 +64,20 @@ def send_friday_yaml_tweet(api):
 
     api.update_status(tweet['text'], media_ids=media_ids, attachment_url=tweet.get('video'))
 
+def friday(api):
+    weekday = datetime.datetime.today().isoweekday()
+    if weekday == ISOFRIDAY:
+        send_friday_yaml_tweet(api)
+    else:
+        print("It's not Friday today. Push at will.")
+        print("\nLast tweet was:\n");
+        print(api.get_user('fridaybot3').status.text)
+
 if __name__ == '__main__':
     api = login()
 
     if '--tweet' in sys.argv:
-        weekday = datetime.datetime.today().isoweekday()
-        if weekday == ISOFRIDAY:
-            send_friday_yaml_tweet(api)
-        else:
-            print("It's not Friday today. Push at will.")
-            print("\nLast tweet was:\n");
-            print(api.get_user('fridaybot3').status.text)
+        friday(api)
 
     elif '--test-api' in sys.argv:
         print(api.get_user('twitter'))
