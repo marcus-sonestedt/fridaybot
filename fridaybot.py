@@ -18,7 +18,7 @@ def login():
 
 def generate_message():
     with open(os.path.join(messageDir, 'messages.txt')) as file:
-        lines = file.readlines()   
+        lines = file.readlines()
 
     random.seed(datetime.datetime.utcnow())
     i = random.randrange(start = 0, stop = len(lines))
@@ -54,12 +54,11 @@ def send_friday_tweet():
     print("Tweeting: " + msg)
     api.update_status(msg)
 
-def send_friday_yaml_tweet():
-    api = login()
+def send_friday_yaml_tweet(api):
     tweet = generate_message_from_yaml()
     print("Tweeting: " + tweet['text'])
-    
-    media_ids = []
+
+    media_ids = None
     if 'image' in tweet:
         media = api.media_upload('images/' + tweet['image'])
         media_ids = [media.media_id]
@@ -72,8 +71,8 @@ if __name__ == '__main__':
     if '--tweet' in sys.argv:
         weekday = datetime.datetime.today().isoweekday()
         if weekday == ISOFRIDAY:
-            send_friday_yaml_tweet()
-        else:            
+            send_friday_yaml_tweet(api)
+        else:
             print("It's not Friday today. Push at will.")
             print("\nLast tweet was:\n");
             print(api.get_user('fridaybot3').status.text)
@@ -88,11 +87,10 @@ if __name__ == '__main__':
         print(generate_message_from_yaml())
 
     elif '--test-tweet' in sys.argv:
-        api = login()
         msg = "Testing at " + str(datetime.datetime.now())
         media = api.media_upload('images/EEiLoSXWsAcnOMt.png')
         print(media)
         api.update_status(msg, media_ids=[media.media_id], attachment_url='https://twitter.com/i/status/1149652994331303936')
-    
+
     else:
         print("No habla")
